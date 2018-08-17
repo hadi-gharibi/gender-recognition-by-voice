@@ -3,3 +3,4 @@ urllib3
 requests
 lxml
 pympler
+pathlib
