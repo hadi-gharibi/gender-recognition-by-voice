@@ -9,7 +9,7 @@ from setuptools import setup, find_packages
 with open('README.md') as readme_file:
     readme = readme_file.read()
 
-with open('requirements.text') as requirements_file:
+with open('requirements.txt') as requirements_file:
     requirements = requirements_file.read()
 
 setup_requirements =[]
@@ -21,10 +21,9 @@ setup(
     install_requires=requirements,
     license="MIT license",
     long_description=readme + '\n\n',
-    include_package_data=True,
-    keywords='irholiday',
-    name='irholiday',
-    packages=find_packages(include=['irholiday']),
+    #include_package_data=True,
+    name='gender-recognition',
+    packages=find_packages(),
     setup_requires=setup_requirements,
-    url='https://github.com/hadi-gharibi/Gender-Recognition-by-Voice'
+    url='https://github.com/hadi-gharibi/gender-recognition-by-voice'
 )
