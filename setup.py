@@ -21,7 +21,7 @@ setup(
     install_requires=requirements,
     license="MIT license",
     long_description=readme + '\n\n',
-    #include_package_data=True,
+    include_package_data=True,
     name='gender-recognition',
     packages=find_packages(),
     setup_requires=setup_requirements,
