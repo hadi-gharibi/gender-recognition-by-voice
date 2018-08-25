@@ -1,9 +1,10 @@
 import numpy as np
 
-class feature_extraction:
-    def __init__(self,amp,freq):
-        self.amp = amp
-        self.freq = freq
+class FeatureExtraction:
+    ''''
+    Isolated class from the data
+    We don't need to define the class each time we need to compute the features on new data
+    '''
 
     def mean_f(self, amp, freq):
         return np.average(freq, weights =amp)
