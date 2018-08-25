@@ -1,6 +1,7 @@
 import numpy as np
 from wave import open as open_wave
 
+
 def normalize(ys, amp=1.0):
     """Normalizes a wave array so the maximum amplitude is +amp or -amp.
     ys: wave array

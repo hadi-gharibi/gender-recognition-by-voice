@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class FeatureExtraction:
     ''''
     Isolated class from the data
@@ -7,18 +8,18 @@ class FeatureExtraction:
     '''
 
     def mean_f(self, amp, freq):
-        return np.average(freq, weights =amp)
+        return np.average(freq, weights=amp)
 
     def _moment_order_k(self, amp, freq, k):
         avg = self.mean_f(amp, freq)
         dev = amp * (freq - avg) ** k
         return dev.sum() / (amp.sum())
 
-    def var_f(self, amp, freq):
+    def _var_f(self, amp, freq):
         return self._moment_order_k(amp, freq, 2)
 
-    def _std_f(self, amp, freq):
-        return np.sqrt(self.var_f(amp, freq))
+    def std_f(self, amp, freq):
+        return np.sqrt(self._var_f(amp, freq))
 
     def _weighted_percentile(self,data, percents, weights=None):
         '''
@@ -48,12 +49,12 @@ class FeatureExtraction:
 
     def skewness_f(self, amp, freq):
         m3 = self._moment_order_k(amp, freq, 3)
-        sigma3 = np.power(self._std_f(amp, freq), 3)
+        sigma3 = np.power(self.std_f(amp, freq), 3)
         return m3 / sigma3
 
     def kurtosis_f(self, amp, freq):
         m4 = self._moment_order_k(amp, freq, 4)
-        sigma4 = np.power(self._std_f(amp, freq), 4)
+        sigma4 = np.power(self.std_f(amp, freq), 4)
         return m4 / sigma4
 
     def peak_f(self, power, freq):
