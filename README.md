@@ -6,7 +6,7 @@ such as mean frequency, spectral entropy or mode frequency.
 <br/>
 <br/>
 <br/>
- **To start the project** :
+ **To start the project** : 
  ```shell
 git clone https://github.com/hadi-gharibi/gender-recognition-by-voice   # Download the repository from GitHub
 cd gender-recognition-by-voice
