@@ -3,7 +3,7 @@ import pandas as pd
 import os
 import re
 
-raw_data = (Path.cwd() / '..' / '..' / 'gender-recognation' / 'data' / 'raw').resolve()
+raw_data = (Path.cwd() / '..' / '..' / 'gender_recognation' / 'data' / 'raw').resolve()
 files = [i for i in raw_data.glob('*')]
 
 df = None
