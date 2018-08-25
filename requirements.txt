@@ -7,3 +7,4 @@ pathlib
 jupyterlab
 matplotlib
 pandas
+wave

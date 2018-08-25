@@ -1,5 +1,4 @@
 import numpy as np
-import os
 from wave import open as open_wave
 
 def normalize(ys, amp=1.0):
