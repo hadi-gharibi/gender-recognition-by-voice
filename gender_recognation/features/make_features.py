@@ -2,6 +2,8 @@ from gender_recognation.features.wave_file import Wave
 from gender_recognation.features.feature_extraction import FeatureExtraction
 import pandas as pd
 import os
+import gender_recognation
+from tqdm import tqdm
 
 fe = FeatureExtraction()
 
@@ -38,7 +40,9 @@ if __name__ == '__main__':
     module_path = os.path.dirname(gender_recognation.__file__)
     df = pd.read_csv(os.path.join(module_path, 'data', 'csv', 'waves.csv'))
 
+    tqdm.pandas(desc="Progress bar")
+
     df[['mean_freq', 'std_freq', 'median_freq', 'first_q', 'third_q', 'range_q', 'skewness', 'kurtosis', 'peak_freq']]=\
-        df.apply(df_feature_extractor,axis=1, result_type="expand")
+        df.progress_apply(df_feature_extractor,axis=1, result_type="expand")
 
     df = df.to_csv(os.path.join(module_path, 'data', 'csv', 'features.csv'))
