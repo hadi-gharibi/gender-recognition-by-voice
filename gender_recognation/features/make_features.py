@@ -1,5 +1,3 @@
-from matplotlib.pyplot import axis
-
 from gender_recognation.features.wave_file import Wave
 from gender_recognation.features.feature_extraction import FeatureExtraction
 import pandas as pd
@@ -37,9 +35,10 @@ def df_feature_extractor(df):
 
 
 if __name__ == '__main__':
-    df = pd.read_csv(os.path.join(os.getcwd(), '..', 'data', 'csv', 'waves.csv'))
+    module_path = os.path.dirname(gender_recognation.__file__)
+    df = pd.read_csv(os.path.join(module_path, 'data', 'csv', 'waves.csv'))
 
     df[['mean_freq', 'std_freq', 'median_freq', 'first_q', 'third_q', 'range_q', 'skewness', 'kurtosis', 'peak_freq']]=\
         df.apply(df_feature_extractor,axis=1, result_type="expand")
 
-    df = df.to_csv(os.path.join(os.getcwd(), '..', 'data', 'csv', 'features.csv'))
+    df = df.to_csv(os.path.join(module_path, 'data', 'csv', 'features.csv'))

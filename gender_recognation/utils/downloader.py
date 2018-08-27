@@ -6,9 +6,13 @@ import multiprocessing
 from tqdm import tqdm
 import os
 from pympler import asizeof
+import gender_recognation
 
 
-def download_file(fname_url, data_path=os.getcwd()+'/../data/tar'):
+module_path = os.path.dirname(gender_recognation.__file__)
+tar_path = str(os.path.join(module_path, 'data', 'tar'))
+
+def download_file(fname_url, data_path=tar_path):
     main_url, fname = fname_url
     url = main_url + fname
     file_path = data_path + '/' + fname
@@ -23,7 +27,7 @@ def download_file(fname_url, data_path=os.getcwd()+'/../data/tar'):
 
 if __name__ == '__main__':
     main_url = 'http://www.repository.voxforge1.org/downloads/SpeechCorpus/Trunk/Audio/Main/16kHz_16bit/'
-    data_path = os.getcwd()+'/../data/tar'
+    data_path = tar_path
     if not os.path.exists(data_path): os.makedirs(data_path)
 
     page = requests.get(main_url)

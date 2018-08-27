@@ -2,8 +2,11 @@ from pathlib import Path
 import pandas as pd
 import os
 import re
+import gender_recognation
 
-raw_data = (Path.cwd() / '..' / '..' / 'gender_recognation' / 'data' / 'raw').resolve()
+module_path = Path(os.path.dirname(gender_recognation.__file__))
+
+raw_data = (module_path / 'data' / 'raw').resolve()
 files = [i for i in raw_data.glob('*')]
 
 df = None
@@ -17,6 +20,7 @@ for file in files:
     #files without readme
     if not readme :
         continue
+    readme = str(readme)
     info = pd.read_csv(readme,sep=':',header=None,names=['k','v'])
 
     with open(readme) as readme_file:
