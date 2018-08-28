@@ -58,4 +58,7 @@ class FeatureExtraction:
         return m4 / sigma4
 
     def peak_f(self, power, freq):
+        #skip bias freq
+        freq = freq[1:]
+        power = power[1:]
         return freq[power.argmax()]
