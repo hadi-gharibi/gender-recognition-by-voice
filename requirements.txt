@@ -9,3 +9,5 @@ matplotlib
 pandas
 wave
 tqdm
+pandas_profiling
+seaborn
