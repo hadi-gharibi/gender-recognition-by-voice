@@ -12,7 +12,7 @@ fe = FeatureExtraction()
 
 def path_to_spectrum(path):
     snd = Wave.read_wave(path)
-    #if LPF: snd.low_pass_filter(cutoff=cutoff)
+    # if LPF: snd.low_pass_filter(cutoff=cutoff)
     return snd
 
 
@@ -61,8 +61,7 @@ def apply_by_multiprocessing(df, func, **kwargs):
     workers = kwargs.pop('workers')
     chunks = kwargs.pop('chunks')
     pool = multiprocessing.Pool(processes=workers)
-    result = list(tqdm(pool.imap(_apply_df, [(d, func, kwargs)
-                                             for d in np.array_split(df, chunks)]), total=chunks))
+    result = list(tqdm(pool.imap(_apply_df, [(d, func, kwargs) for d in np.array_split(df, chunks)]), total=chunks))
     pool.close()
     return pd.concat(result)
 
@@ -70,11 +69,9 @@ def apply_by_multiprocessing(df, func, **kwargs):
 if __name__ == '__main__':
     module_path = os.path.dirname(gender_recognation.__file__)
     df = pd.read_csv(os.path.join(module_path, 'data', 'csv', 'waves.csv'))
-
     df[['lp_mean_freq', 'lp_std_freq', 'lp_median_freq', 'lp_first_q', 'lp_third_q', 'lp_range_q', 'lp_skewness',
-        'lp_kurtosis', 'lp_peak_freq''mean_freq', 'std_freq', 'median_freq', 'first_q', 'third_q', 'range_q',
+        'lp_kurtosis', 'lp_peak_freq', 'mean_freq', 'std_freq', 'median_freq', 'first_q', 'third_q', 'range_q',
         'skewness', 'kurtosis', 'peak_freq']] =\
-        apply_by_multiprocessing(df.path, df_feature_extractor, workers=4,chunks=5000)
+        apply_by_multiprocessing(df.path, df_feature_extractor, workers=4, chunks=5)
 
-
-    df = df.to_csv(os.path.join(module_path, 'data', 'csv', 'features.csv'))
+    df.to_csv(os.path.join(module_path, 'data', 'csv', 'features.csv'))
