@@ -21,7 +21,7 @@ def feature_extractor(snd):
     std_freq = fe.std_f(amp, freq)
     median_freq = fe.median_f(amp, freq)
     first_q = fe.first_quantile_f(amp, freq)
-    third_q = fe.first_quantile_f(amp, freq)
+    third_q = fe.third_quantile_f(amp, freq)
     range_q = fe.inter_quantile_range_f(amp, freq)
     skewness = fe.skewness_f(amp, freq)
     kurtosis = fe.kurtosis_f(amp, freq)
