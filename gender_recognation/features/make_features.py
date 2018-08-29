@@ -3,14 +3,16 @@ from gender_recognation.features.feature_extraction import FeatureExtraction
 import pandas as pd
 import os
 import gender_recognation
-from tqdm import tqdm
+from tqdm import *
+import multiprocessing
+import numpy as np
 
 fe = FeatureExtraction()
 
 
-def path_to_spectrum(path, LPF=True, cutoff=280):
+def path_to_spectrum(path):
     snd = Wave.read_wave(path)
-    if LPF: snd.low_pass_filter(cutoff=cutoff)
+    # if LPF: snd.low_pass_filter(cutoff=cutoff)
     return snd
 
 
@@ -27,22 +29,49 @@ def feature_extractor(snd):
     kurtosis = fe.kurtosis_f(amp, freq)
     peak_freq = fe.peak_f(power, freq)
 
-    return [mean_freq, std_freq, median_freq, first_q, third_q, range_q, skewness, kurtosis, peak_freq]
+    # LPF
+    snd.low_pass_filter(cutoff=280)
+    amp, freq, power = snd.amps, snd.fs, snd.power
+    lp_mean_freq = fe.mean_f(amp, freq)
+    lp_std_freq = fe.std_f(amp, freq)
+    lp_median_freq = fe.median_f(amp, freq)
+    lp_first_q = fe.first_quantile_f(amp, freq)
+    lp_third_q = fe.third_quantile_f(amp, freq)
+    lp_range_q = fe.inter_quantile_range_f(amp, freq)
+    lp_skewness = fe.skewness_f(amp, freq)
+    lp_kurtosis = fe.kurtosis_f(amp, freq)
+    lp_peak_freq = fe.peak_f(power, freq)
+
+    return [lp_mean_freq, lp_std_freq, lp_median_freq, lp_first_q, lp_third_q, lp_range_q, lp_skewness, lp_kurtosis,
+            lp_peak_freq, mean_freq, std_freq, median_freq, first_q, third_q, range_q, skewness, kurtosis, peak_freq]
 
 
-def df_feature_extractor(df):
-    path = df.path
+def df_feature_extractor(path):
+
     snd = path_to_spectrum(path)
-    return feature_extractor(snd)
+    return pd.Series(feature_extractor(snd))
+
+
+def _apply_df(args):
+    df_, func, kwargs = args
+    return df_.apply(func, **kwargs)
+
+
+def apply_by_multiprocessing(df, func, **kwargs):
+    workers = kwargs.pop('workers')
+    chunks = kwargs.pop('chunks')
+    pool = multiprocessing.Pool(processes=workers)
+    result = list(tqdm(pool.imap(_apply_df, [(d, func, kwargs) for d in np.array_split(df, chunks)]), total=chunks))
+    pool.close()
+    return pd.concat(result)
 
 
 if __name__ == '__main__':
     module_path = os.path.dirname(gender_recognation.__file__)
     df = pd.read_csv(os.path.join(module_path, 'data', 'csv', 'waves.csv'))
+    df[['lp_mean_freq', 'lp_std_freq', 'lp_median_freq', 'lp_first_q', 'lp_third_q', 'lp_range_q', 'lp_skewness',
+        'lp_kurtosis', 'lp_peak_freq', 'mean_freq', 'std_freq', 'median_freq', 'first_q', 'third_q', 'range_q',
+        'skewness', 'kurtosis', 'peak_freq']] =\
+        apply_by_multiprocessing(df.path, df_feature_extractor, workers=4, chunks=5)
 
-    tqdm.pandas(desc="Progress bar")
-
-    df[['mean_freq', 'std_freq', 'median_freq', 'first_q', 'third_q', 'range_q', 'skewness', 'kurtosis', 'peak_freq']]=\
-        df.progress_apply(df_feature_extractor,axis=1, result_type="expand")
-
-    df = df.to_csv(os.path.join(module_path, 'data', 'csv', 'features.csv'))
+    df.to_csv(os.path.join(module_path, 'data', 'csv', 'features.csv'))
