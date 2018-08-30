@@ -11,3 +11,4 @@ wave
 tqdm
 pandas_profiling
 seaborn
+sklearn
